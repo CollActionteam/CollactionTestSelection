@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  collactiontestselection:
+    image: collactiontestselection
+    env_file:
+      - collactiontestselection.env
+    ports:
+      - '80:80'
+    build:
+      context: .
+      dockerfile: CollactionTestSelection/Dockerfile

@@ -1,0 +1,13 @@
+﻿@model DeployViewModel
+@{
+    ViewData["Title"] = $"Deployment successfull: {Model.Tag}";
+}
+
+<h2>
+    Deployment successfull: @Model.Tag
+</h2>
+<ul>
+    @Html.Raw(Model.ResultAsList)
+</ul>
+
+<a href="/">Back</a>
