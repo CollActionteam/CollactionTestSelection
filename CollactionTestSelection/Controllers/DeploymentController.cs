@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace CollactionTestSelection.Controllers
 {
-    [Authorize]
     public sealed class DeploymentController : Controller
     {
         private readonly JiraOptions _jiraOptions;
@@ -36,12 +35,14 @@ namespace CollactionTestSelection.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(new IndexViewModel(pullRequests: await GetPullRequests()));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Deploy([Required] [RegularExpression(@"^CA-\d+$")] string tag)
         {
@@ -49,6 +50,12 @@ namespace CollactionTestSelection.Controllers
                 throw new InvalidOperationException("tag not specified or correct");
 
             return View(new DeployViewModel(tag: tag, result: await RunDeploymentCommand(tag)));
+        }
+
+        [HttpGet]
+        public IActionResult HealthCheck()
+        {
+            return Content("OK");
         }
 
         private async Task<IEnumerable<PullRequestModel>> GetPullRequests()
