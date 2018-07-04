@@ -44,7 +44,7 @@ namespace CollactionTestSelection.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Deploy([Required] [RegularExpression(@"^CA-\d+$")] string tag)
+        public async Task<IActionResult> Deploy([Required] [RegularExpression(@"^[A-Z]+-\d+$")] string tag)
         {
             if (!ModelState.IsValid)
                 throw new InvalidOperationException("tag not specified or correct");
@@ -81,7 +81,7 @@ namespace CollactionTestSelection.Controllers
 
                             _logger.LogInformation("received github API response: {0}", messageContents);
 
-                            Regex pullRequestTag = new Regex(@"CA-\d+");
+                            Regex pullRequestTag = new Regex($"{_jiraOptions.PROJECT_KEY}-\\d+");
 
                             return JArray.Parse(messageContents)
                                          .Values<dynamic>()
