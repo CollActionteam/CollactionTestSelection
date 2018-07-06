@@ -88,13 +88,16 @@ namespace CollactionTestSelection.Controllers
                                          .Where(dict => pullRequestTag.IsMatch((string)dict.head.label));
 
                             return relevantPullRequests
-                                .Select(dict => 
-                                    new PullRequestModel(
-                                        title: (string)dict.title, 
-                                        tag: pullRequestTag.Match((string)dict.head.label).Value, 
-                                        githubLink: (string)dict.html_url, 
-                                        jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{pullRequestTag.Match((string)dict.head.label).Value}",
-                                        hasDuplicates: relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == pullRequestTag.Match((string)dict.head.label).Value && pr.id != dict.id)))
+                                .Select(dict =>
+                                {
+                                    string tag = pullRequestTag.Match((string)dict.head.label).Value;
+                                    return new PullRequestModel(
+                                        title: (string)dict.title,
+                                        tag: tag,
+                                        githubLink: (string)dict.html_url,
+                                        jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{tag}",
+                                        hasDuplicates: relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == tag && pr.id != dict.id));
+                                })
                                 .ToList();
                         }
                     }
