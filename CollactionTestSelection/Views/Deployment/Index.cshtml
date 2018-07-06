@@ -7,6 +7,7 @@
         <th align="left">Github pull request</th>
         <th align="left">Jira ticket</th>
         <th align="left">Deploy</th>
+        <th align="left">Warning</th>
     </tr>
     @foreach (PullRequestModel pullRequest in Model.PullRequests)
     {
@@ -19,6 +20,7 @@
                     <input type="submit" value="Deploy @pullRequest.Title" />
                 </form>
             </td>
+            <td>@pullRequest.Warning</td>
         </tr>
     }
 </table>

@@ -83,16 +83,19 @@ namespace CollactionTestSelection.Controllers
 
                             Regex pullRequestTag = new Regex($"{_jiraOptions.PROJECT_KEY}-\\d+");
 
-                            return JArray.Parse(messageContents)
+                            IEnumerable<dynamic> relevantPullRequests = JArray.Parse(messageContents)
                                          .Values<dynamic>()
-                                         .Where(dict => pullRequestTag.IsMatch((string)dict.head.label))
-                                         .Select(dict => 
-                                             new PullRequestModel(
-                                                 title: (string)dict.title, 
-                                                 tag: pullRequestTag.Match((string)dict.head.label).Value, 
-                                                 githubLink: (string)dict.html_url, 
-                                                 jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{pullRequestTag.Match((string)dict.head.label).Value}"))
-                                         .ToList();
+                                         .Where(dict => pullRequestTag.IsMatch((string)dict.head.label));
+
+                            return relevantPullRequests
+                                .Select(dict => 
+                                    new PullRequestModel(
+                                        title: (string)dict.title, 
+                                        tag: pullRequestTag.Match((string)dict.head.label).Value, 
+                                        githubLink: (string)dict.html_url, 
+                                        jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{pullRequestTag.Match((string)dict.head.label).Value}",
+                                        hasDuplicates: relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == pullRequestTag.Match((string)dict.head.label).Value && pr.id != dict.id)))
+                                .ToList();
                         }
                     }
                 }
