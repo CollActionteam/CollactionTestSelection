@@ -85,8 +85,13 @@ namespace CollactionTestSelection.Controllers
 
                             return JArray.Parse(messageContents)
                                          .Values<dynamic>()
-                                         .Where(dict => pullRequestTag.IsMatch((string)dict.title))
-                                         .Select(dict => new PullRequestModel(title: (string)dict.title, tag: pullRequestTag.Match((string)dict.title).Value, githubLink: (string)dict.html_url, jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{pullRequestTag.Match((string)dict.title).Value}"))
+                                         .Where(dict => pullRequestTag.IsMatch((string)dict.head.label))
+                                         .Select(dict => 
+                                             new PullRequestModel(
+                                                 title: (string)dict.title, 
+                                                 tag: pullRequestTag.Match((string)dict.head.label).Value, 
+                                                 githubLink: (string)dict.html_url, 
+                                                 jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{pullRequestTag.Match((string)dict.head.label).Value}"))
                                          .ToList();
                         }
                     }
