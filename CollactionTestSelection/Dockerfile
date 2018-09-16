@@ -6,6 +6,7 @@ COPY . .
 WORKDIR /src/CollactionTestSelection
 RUN dotnet build CollactionTestSelection.csproj -c Release -o /app
 RUN dotnet publish CollactionTestSelection.csproj -c Release -o /app
+RUN apt update && apt install dos2unix && dos2unix /app/ecs-deploy
 
 FROM microsoft/dotnet:2.1.1-aspnetcore-runtime AS final
 WORKDIR /app

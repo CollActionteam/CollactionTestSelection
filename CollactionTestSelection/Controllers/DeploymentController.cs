@@ -44,12 +44,12 @@ namespace CollactionTestSelection.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Deploy([Required] [RegularExpression(@"^[A-Z]+-\d+$")] string tag)
+        public async Task<IActionResult> Deploy(TagViewModel model)
         {
             if (!ModelState.IsValid)
                 throw new InvalidOperationException("tag not specified or correct");
 
-            return View(new DeployViewModel(tag: tag, result: await RunDeploymentCommand(tag)));
+            return View(new DeployViewModel(tag: model.Tag, result: await RunDeploymentCommand(model.Tag)));
         }
 
         [HttpGet]
@@ -124,7 +124,7 @@ namespace CollactionTestSelection.Controllers
                     { "-n", _awsOptions.AWS_SERVICE },
                     { "-i", $"{_awsOptions.DOCKER_IMAGE}:{tag}" },
                     { "-D", $"{_awsOptions.DESIRED_COUNT}" },
-                    { "-M", $"{(int)Math.Round(100.0 * (double)_awsOptions.MAX_COUNT / (double)_awsOptions.DESIRED_COUNT)}" },
+                    { "-M", $"{(int)Math.Round(100.0 * _awsOptions.MAX_COUNT / _awsOptions.DESIRED_COUNT)}" },
                     { "-t", $"{_awsOptions.TIMEOUT}" }
                 };
 
