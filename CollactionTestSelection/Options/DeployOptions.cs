@@ -8,8 +8,8 @@
         public string AWS_CLUSTER { get; set; }
         public string AWS_SERVICE { get; set; }
         public string DOCKER_IMAGE { get; set; }
-        public int TIMEOUT { get; set; }
-        public int DESIRED_COUNT { get; set; }
-        public int MAX_COUNT { get; set; }
+        public int TIMEOUT { get; set; } = 600;
+        public int DESIRED_COUNT { get; set; } = 1;
+        public int MAX_COUNT { get; set; } = 2;
     }
 }

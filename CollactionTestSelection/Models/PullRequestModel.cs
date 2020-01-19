@@ -1,16 +1,15 @@
-﻿using CollactionTestSelection.Options;
-
-namespace CollactionTestSelection.Models
+﻿namespace CollactionTestSelection.Models
 {
     public sealed class PullRequestModel
     {
-        public PullRequestModel(string title, string tag, string githubLink, string jiraLink, bool hasDuplicates)
+        public PullRequestModel(string title, string tag, string githubLink, string jiraLink, bool hasDuplicates, string branchDomain)
         {
             Title = title;
             Tag = tag;
             GithubLink = githubLink;
             JiraLink = jiraLink;
             HasDuplicates = hasDuplicates;
+            BranchDomain = branchDomain;
         }
 
         public string Title { get; }
@@ -18,6 +17,7 @@ namespace CollactionTestSelection.Models
         public string GithubLink { get; }
         public string JiraLink { get; }
         public bool HasDuplicates { get; }
+        public string BranchDomain { get; }
 
         public string Warning
         {

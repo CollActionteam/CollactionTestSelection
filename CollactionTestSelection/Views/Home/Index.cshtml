@@ -1,4 +1,7 @@
 ﻿@model IndexViewModel
+@using CollactionTestSelection.Options
+@using Microsoft.Extensions.Options
+@inject IOptions<NetiflyOptions> NetiflyOptions
 @{ ViewData["Title"] = "Select pull-request"; }
 
 <h1>Choose which pull request to deploy</h1>
@@ -6,27 +9,18 @@
     <tr>
         <th align="left">Github pull request</th>
         <th align="left">Jira ticket</th>
+        <th align="left">Test site</th>
         <th align="left">Deploy</th>
         <th align="left">Warning</th>
     </tr>
     <tr>
         <td></td>
         <td></td>
+        <td><a href="https://@NetiflyOptions.Value.NETIFLY_BASE_URL">Show master test site</a></td>
         <td>
             <form asp-action="Deploy" method="post">
                 <input type="hidden" name="Tag" value="master" />
                 <input type="submit" value="Deploy master acceptance test" />
-            </form>
-        </td>
-        <td></td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td>
-            <form asp-action="Deploy" method="post">
-                <input type="hidden" name="Tag" value="Friesland" />
-                <input type="submit" value="Deploy Friesland acceptance test" />
             </form>
         </td>
         <td></td>
@@ -36,6 +30,7 @@
         <tr>
             <td><a href="@pullRequest.GithubLink">Show @pullRequest.Title on Github</a></td>
             <td><a href="@pullRequest.JiraLink">Show @pullRequest.Title on Jira</a></td>
+            <td><a href="@pullRequest.BranchDomain">Show @pullRequest.Title test site</a></td>
             <td>
                 <form asp-action="Deploy" method="post">
                     <input type="hidden" name="Tag" value="@pullRequest.Tag" />

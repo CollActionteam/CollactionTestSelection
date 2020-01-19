@@ -7,7 +7,6 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -18,19 +17,21 @@ using System.Threading.Tasks;
 
 namespace CollactionTestSelection.Controllers
 {
-    public sealed class DeploymentController : Controller
+    public sealed class HomeController : Controller
     {
         private readonly JiraOptions _jiraOptions;
         private readonly GithubOptions _githubOptions;
         private readonly DeployOptions _awsOptions;
+        private readonly NetiflyOptions _netiflyOptions;
         private readonly SemaphoreSlim _deploymentLock;
-        private readonly ILogger<DeploymentController> _logger;
+        private readonly ILogger<HomeController> _logger;
 
-        public DeploymentController(IOptions<GithubOptions> githubOptions, IOptions<DeployOptions> awsOptions, IOptions<JiraOptions> jiraOptions, SemaphoreSlim deploymentLock, ILogger<DeploymentController> logger)
+        public HomeController(IOptions<GithubOptions> githubOptions, IOptions<DeployOptions> awsOptions, IOptions<JiraOptions> jiraOptions, IOptions<NetiflyOptions> netiflyOptions, SemaphoreSlim deploymentLock, ILogger<HomeController> logger)
         {
             _jiraOptions = jiraOptions.Value;
             _githubOptions = githubOptions.Value;
             _awsOptions = awsOptions.Value;
+            _netiflyOptions = netiflyOptions.Value;
             _deploymentLock = deploymentLock;
             _logger = logger;
         }
@@ -91,12 +92,17 @@ namespace CollactionTestSelection.Controllers
                                 .Select(dict =>
                                 {
                                     string tag = pullRequestTag.Match((string)dict.head.label).Value;
+                                    string branch = (string)dict.head["ref"];
+                                    string branchDomain = $"https://{WebUtility.UrlEncode(branch)}--{_netiflyOptions.NETIFLY_BASE_URL}";
+                                    string jiraLink = $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{tag}";
+                                    bool hasDuplicates = relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == tag && pr.id != dict.id);
                                     return new PullRequestModel(
                                         title: (string)dict.title,
                                         tag: tag,
                                         githubLink: (string)dict.html_url,
-                                        jiraLink: $"https://{_jiraOptions.JIRA_TEAM}.atlassian.net/browse/{tag}",
-                                        hasDuplicates: relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == tag && pr.id != dict.id));
+                                        jiraLink: jiraLink,
+                                        branchDomain: branchDomain,
+                                        hasDuplicates: hasDuplicates);
                                 })
                                 .ToList();
                         }
