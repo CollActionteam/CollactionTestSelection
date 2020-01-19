@@ -28,6 +28,7 @@ namespace CollactionTestSelection
                             o.Username = Configuration["USERNAME"];
                             o.Password = Configuration["PASSWORD"];
                         });
+            services.AddHealthChecks();
             services.Configure<GithubOptions>(Configuration);
             services.Configure<DeployOptions>(Configuration);
             services.Configure<JiraOptions>(Configuration);
@@ -45,6 +46,7 @@ namespace CollactionTestSelection
                .UseEndpoints(routes =>
                {
                    routes.MapDefaultControllerRoute();
+                   routes.MapHealthChecks("/health");
                });
         }
     }

@@ -18,7 +18,11 @@ namespace CollactionTestSelection.Auth
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            Context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"CollAction TestSelect\"");
+            if (Request.Path != "/health")
+            {
+                Context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"CollAction TestSelect\"");
+            }
+
             if (!Request.Headers.ContainsKey("Authorization"))
             {
                 return Task.FromResult(AuthenticateResult.Fail("Missing Authorization Header"));
