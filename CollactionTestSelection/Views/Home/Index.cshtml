@@ -6,38 +6,42 @@
 
 <h1>Choose which pull request to deploy</h1>
 <table>
-    <tr>
-        <th align="left">Github pull request</th>
-        <th align="left">Jira ticket</th>
-        <th align="left">Test site</th>
-        <th align="left">Deploy</th>
-        <th align="left">Warning</th>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
-        <td><a href="https://@DeployOptions.Value.NetiflyBaseUrl">Show master test site</a></td>
-        <td>
-            <form asp-action="Deploy" method="post">
-                <input type="hidden" name="Tag" value="master" />
-                <input type="submit" value="Deploy master acceptance test" />
-            </form>
-        </td>
-        <td></td>
-    </tr>
-    @foreach (PullRequestModel pullRequest in Model.PullRequests)
-    {
+    <thead>
         <tr>
-            <td><a href="@pullRequest.GithubLink">Show @pullRequest.Title on Github</a></td>
-            <td><a href="@pullRequest.JiraLink">Show @pullRequest.Title on Jira</a></td>
-            <td><a href="@pullRequest.BranchDomain">Show @pullRequest.Title test site</a></td>
+            <th align="left">Github pull request</th>
+            <th align="left">Jira ticket</th>
+            <th align="left">Test site</th>
+            <th align="left">Deploy</th>
+            <th align="left">Warning</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td><a href="https://@DeployOptions.Value.NetiflyBaseUrl">Show master test site</a></td>
             <td>
                 <form asp-action="Deploy" method="post">
-                    <input type="hidden" name="Tag" value="@pullRequest.Tag" />
-                    <input type="submit" value="Deploy @pullRequest.Title" />
+                    <input type="hidden" name="Tag" value="master" />
+                    <input type="submit" value="Deploy master acceptance test" />
                 </form>
             </td>
-            <td>@pullRequest.Warning</td>
+            <td></td>
         </tr>
-    }
+        @foreach (PullRequestModel pullRequest in Model.PullRequests)
+        {
+            <tr>
+                <td><a href="@pullRequest.GithubLink">Show @pullRequest.Title on Github</a></td>
+                <td><a href="@pullRequest.JiraLink">Show @pullRequest.Title on Jira</a></td>
+                <td><a href="@pullRequest.BranchDomain">Show @pullRequest.Title test site</a></td>
+                <td>
+                    <form asp-action="Deploy" method="post">
+                        <input type="hidden" name="Tag" value="@pullRequest.Tag" />
+                        <input type="submit" value="Deploy @pullRequest.Title" />
+                    </form>
+                </td>
+                <td>@pullRequest.Warning</td>
+            </tr>
+        }
+    </tbody>
 </table>
