@@ -1,7 +1,7 @@
 ﻿@model IndexViewModel
-@using CollactionTestSelection.Options
+@using CollactionTestSelection.Deployment
 @using Microsoft.Extensions.Options
-@inject IOptions<NetiflyOptions> NetiflyOptions
+@inject IOptions<DeployOptions> DeployOptions
 @{ ViewData["Title"] = "Select pull-request"; }
 
 <h1>Choose which pull request to deploy</h1>
@@ -16,7 +16,7 @@
     <tr>
         <td></td>
         <td></td>
-        <td><a href="https://@NetiflyOptions.Value.NETIFLY_BASE_URL">Show master test site</a></td>
+        <td><a href="https://@DeployOptions.Value.NetiflyBaseUrl">Show master test site</a></td>
         <td>
             <form asp-action="Deploy" method="post">
                 <input type="hidden" name="Tag" value="master" />

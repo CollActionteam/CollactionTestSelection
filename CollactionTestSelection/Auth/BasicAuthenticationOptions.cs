@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using System.ComponentModel.DataAnnotations;
 
 namespace CollactionTestSelection.Auth
 {
     public class BasicAuthenticationOptions : AuthenticationSchemeOptions
     {
-        public string Username { get; set; }
-        
-        public string Password { get; set; }
+        [Required]
+        public string Username { get; set; } = null!;
+
+        [Required]
+        public string Password { get; set; } = null!;
     }
 }

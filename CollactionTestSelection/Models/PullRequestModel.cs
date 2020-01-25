@@ -19,7 +19,7 @@
         public bool HasDuplicates { get; }
         public string BranchDomain { get; }
 
-        public string Warning
+        public string? Warning
         {
             get
             {

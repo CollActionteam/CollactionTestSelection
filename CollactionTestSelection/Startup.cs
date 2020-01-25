@@ -1,20 +1,18 @@
 ﻿using CollactionTestSelection.Auth;
-using CollactionTestSelection.Options;
+using CollactionTestSelection.Deployment;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CollactionTestSelection
 {
     public sealed class Startup
     {
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -25,18 +23,16 @@ namespace CollactionTestSelection
                         "Basic",
                         o =>
                         {
-                            o.Username = Configuration["USERNAME"];
-                            o.Password = Configuration["PASSWORD"];
+                            o.Username = configuration["Username"];
+                            o.Password = configuration["Password"];
                         });
             services.AddHealthChecks();
-            services.Configure<GithubOptions>(Configuration);
-            services.Configure<DeployOptions>(Configuration);
-            services.Configure<JiraOptions>(Configuration);
-            services.Configure<NetiflyOptions>(Configuration);
-            services.AddSingleton(new SemaphoreSlim(1, 1)); // Deployment lock
             services.AddLogging();
+            services.AddTransient<IDeploymentService, DeploymentService>();
+            services.Configure<DeployOptions>(configuration);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static")]
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting()

@@ -5,7 +5,7 @@ namespace CollactionTestSelection.Models
     public class TagViewModel
     {
         [Required]
-        [RegularExpression(@"^([A-Z]+-\d+|master|Friesland)$")] 
-        public string Tag { get; set; }
+        [RegularExpression(@"^([A-Z]+-\d+|master|Friesland)$")]
+        public string Tag { get; set; } = null!;
     }
 }
