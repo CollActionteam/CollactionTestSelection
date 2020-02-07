@@ -85,10 +85,6 @@ namespace CollactionTestSelection.Deployment
             {
                 logger.LogInformation("Creating aws configuration directory");
                 DirectoryInfo info = Directory.CreateDirectory("/root/.aws/");
-                if (!info.Exists)
-                {
-                    throw new InvalidOperationException("Could not create .aws");
-                }
 
                 logger.LogInformation("Creating aws configuration");
                 File.WriteAllText("/root/.aws/config", $@"[default]
