@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -82,6 +83,20 @@ namespace CollactionTestSelection.Deployment
             await deploymentLock.WaitAsync().ConfigureAwait(false);
             try
             {
+                logger.LogInformation("Creating aws configuration directory");
+                DirectoryInfo info = Directory.CreateDirectory("/root/.aws/");
+                if (!info.Exists)
+                {
+                    throw new InvalidOperationException("Could not create .aws");
+                }
+
+                logger.LogInformation("Creating aws configuration");
+                File.WriteAllText("/root/.aws/config", $@"[default]
+region = {deployOptions.AwsDefaultRegion}");
+                File.WriteAllText("/root/.aws/credentials", $@"[default]
+aws_access_key_id = {deployOptions.AwsSecretAccessKeyID}
+aws_secret_access_key = {deployOptions.AwsSecretAccessKey}");
+
                 Dictionary<string, string> arguments = new Dictionary<string, string>()
                 {
                     { "-k", deployOptions.AwsSecretAccessKeyID },
