@@ -56,14 +56,15 @@ namespace CollactionTestSelection.Deployment
                 return relevantPullRequests
                     .Select(dict =>
                     {
-                        string tag = pullRequestTag.Match((string)dict.head.label).Value;
+                        string jiraTag = pullRequestTag.Match((string)dict.head.label).Value;
                         string branch = (string)dict.head["ref"];
+                        string dockerTag = branch.Replace('/', '-');
                         string branchDomain = $"https://{WebUtility.UrlEncode(branch)}--{deployOptions.NetiflyBaseUrl}";
-                        string jiraLink = $"https://{deployOptions.JiraTeam}.atlassian.net/browse/{tag}";
-                        bool hasDuplicates = relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == tag && pr.id != dict.id);
+                        string jiraLink = $"https://{deployOptions.JiraTeam}.atlassian.net/browse/{jiraTag}";
+                        bool hasDuplicates = relevantPullRequests.Any(pr => pullRequestTag.Match((string)pr.head.label).Value == jiraTag && pr.id != dict.id);
                         return new PullRequestModel(
                             title: (string)dict.title,
-                            tag: tag,
+                            dockerTag: dockerTag,
                             githubLink: (string)dict.html_url,
                             jiraLink: jiraLink,
                             branchDomain: branchDomain,

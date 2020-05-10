@@ -36,7 +36,7 @@
                 <td><a href="@pullRequest.BranchDomain">Show @pullRequest.Title test site</a></td>
                 <td>
                     <form asp-action="Deploy" method="post">
-                        <input type="hidden" name="Tag" value="@pullRequest.Tag" />
+                        <input type="hidden" name="Tag" value="@pullRequest.DockerTag" />
                         <input type="submit" value="Deploy @pullRequest.Title" />
                     </form>
                 </td>
